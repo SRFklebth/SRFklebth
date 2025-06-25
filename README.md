@@ -1,3 +1,2 @@
 ## Hi there 👋
-
-![grid](grid.png)
+![Grid](grid.png)
