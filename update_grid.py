@@ -2,8 +2,8 @@ import json
 from PIL import Image, ImageDraw, ImageFont
 import os
 
-GRID_SIZE_X = 101
-GRID_SIZE_Y = 51
+GRID_SIZE_X = 51
+GRID_SIZE_Y = 26
 PIXEL_SIZE = 20
 
 def load_grid(filename="grid.json"):
@@ -28,7 +28,7 @@ def merge_updates(grid, updates_folder="pixel-updates"):
             print(f"Skipping invalid update file: {fname} (bad format)")
             continue
 
-        if not (0 <= x < grid["width"] and 0 <= y < grid["height"]):
+        if not (0 <= x < (grid["width"]-1) and 0 <= y < (grid["height"]-1)):
             print(f"Skipping out-of-bounds pixel in file: {fname} ({x},{y})")
             continue
 
