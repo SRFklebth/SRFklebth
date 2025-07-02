@@ -1,0 +1,32 @@
+name: Validate Pixel Update
+
+on:
+  pull_request:
+    paths:
+      - 'pixel-updates/*.json'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Validate JSON files
+        run: |
+          python -c "
+import json, glob, sys
+for f in glob.glob('pixel-updates/*.json'):
+    with open(f) as file:
+        data = json.load(file)
+        for key in ['x', 'y', 'color']:
+            if key not in data:
+                print(f'Missing {key} in {f}')
+                sys.exit(1)
+"
+      - name: Run update_grid.py (optional)
+        run: python update_grid.py
