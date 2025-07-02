@@ -1,12 +1,10 @@
-on:
-jobs:
 name: Pixel Update Issue Check
 
 on:
   issues:
     types: [opened]
 
-
+jobs:
   update-pixel:
     runs-on: ubuntu-latest
     permissions:
