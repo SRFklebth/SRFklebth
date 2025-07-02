@@ -22,23 +22,23 @@ def generate_image(grid, output="grid.png"):
 
     img = Image.new("RGBA", (img_width, img_height), (0, 0, 0, 0))
 
-    for coord, color in pixels.items():
+    for coord, colour in pixels.items():
         x, y = map(int, coord.split(","))
-        r, g, b = tuple(int(color.lstrip("#")[i:i+2], 16) for i in (0, 2, 4))
+        r, g, b = tuple(int(colour.lstrip("#")[i:i+2], 16) for i in (0, 2, 4))
         for dx in range(PIXEL_SIZE):
             for dy in range(PIXEL_SIZE):
                 img.putpixel((x * PIXEL_SIZE + dx, y * PIXEL_SIZE + dy), (r, g, b, 255))
 
     draw = ImageDraw.Draw(img)
-    line_color = (255, 255, 255, 100)
+    line_colour = (255, 255, 255, 100)
 
     for x in range(width + 1):
         x_pos = x * PIXEL_SIZE
-        draw.line([(x_pos, 0), (x_pos, img_height)], fill=line_color, width=1)
+        draw.line([(x_pos, 0), (x_pos, img_height)], fill=line_colour, width=1)
 
     for y in range(height + 1):
         y_pos = y * PIXEL_SIZE
-        draw.line([(0, y_pos), (img_width, y_pos)], fill=line_color, width=1)
+        draw.line([(0, y_pos), (img_width, y_pos)], fill=line_colour, width=1)
 
     font = ImageFont.load_default()
     for x in range(width):
@@ -57,13 +57,13 @@ def main():
     try:
         x = int(sys.argv[1])
         y = int(sys.argv[2])
-        color = sys.argv[3]
+        colour = sys.argv[3]
     except ValueError:
-        print("Invalid arguments. x and y must be integers, color must be hex.")
+        print("Invalid arguments. x and y must be integers, colour must be hex.")
         sys.exit(1)
 
-    if not (color.startswith("#") and len(color) == 7):
-        print("Color must be in #RRGGBB format.")
+    if not (colour.startswith("#") and len(colour) == 7):
+        print("Colour must be in #RRGGBB format.")
         sys.exit(1)
 
     grid = load_grid()
@@ -72,8 +72,8 @@ def main():
         print(f"Out-of-bounds pixel: ({x},{y})")
         sys.exit(1)
 
-    grid["pixels"][f"{x},{y}"] = color
-    print(f"Applied pixel update: ({x},{y}) -> {color}")
+    grid["pixels"][f"{x},{y}"] = colour
+    print(f"Applied pixel update: ({x},{y}) -> {colour}")
 
     save_grid(grid)
     generate_image(grid)
