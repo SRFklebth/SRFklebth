@@ -1,18 +1,37 @@
+on:
+jobs:
 name: Pixel Update Issue Check
 
 on:
   issues:
     types: [opened]
 
-jobs:
-  check-issue-title:
+
+  update-pixel:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: write
     steps:
-      - name: Check if issue title starts with 'pixel update:'
+      - uses: actions/checkout@v4
+
+      - name: Parse issue title and run update_grid.py
+        id: parse_and_update
         run: |
           TITLE="${{ github.event.issue.title }}"
-          if [[ "$TITLE" != pixel\ update:* ]]; then
-            echo "Issue title must start with 'pixel update:'"
+          if [[ ! "$TITLE" =~ ^pixel\ update:[[:space:]]+([0-9]+)[[:space:]]+([0-9]+)[[:space:]]+(#[0-9A-Fa-f]{6})$ ]]; then
+            echo "Issue title must be in the format: pixel update: x y #RRGGBB"
             exit 1
           fi
-          echo "Issue title is valid."
+          X=$(echo "$TITLE" | awk '{print $3}')
+          Y=$(echo "$TITLE" | awk '{print $4}')
+          COLOR=$(echo "$TITLE" | awk '{print $5}')
+          echo "Parsed values: x=$X, y=$Y, color=$COLOR"
+          python3 update_grid.py "$X" "$Y" "$COLOR"
+
+      - name: Close issue if successful
+        if: success()
+        uses: peter-evans/close-issue@v3
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          comment: "Pixel update applied and image updated. Issue closed automatically."
