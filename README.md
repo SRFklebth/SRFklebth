@@ -6,6 +6,6 @@ Format: pixel update: x-coordinate y-coordinate hexvalue
 ![Grid](grid.png)
 
 ## TODOs
--[ ] Make sure that all hexvalues work
--[ ] Adjust Grid to start at 1 1
--[ ] Change from json to a other format, maybe dictionary
+- [ ] Make sure that all hexvalues work
+- [ ] Adjust Grid to start at 1 1
+- [ ] Change from json to a other format, maybe dictionary
