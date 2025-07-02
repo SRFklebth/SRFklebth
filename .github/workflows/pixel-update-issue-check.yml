@@ -38,3 +38,11 @@ jobs:
         with:
           issue-number: ${{ github.event.issue.number }}
           comment: "Pixel update applied and image updated. Issue closed automatically."
+      - name: Commit and push grid changes
+        if: success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add grid.json grid.png
+          git commit -m "Update grid for $TITLE from issue #${{ github.event.issue.number }}" || echo "No changes to commit"
+          git push
