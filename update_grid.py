@@ -21,16 +21,16 @@ def generate_image(grid, output="grid.png"):
     img_height = height * PIXEL_SIZE
 
     img = Image.new("RGBA", (img_width, img_height), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
 
     for coord, colour in pixels.items():
         x, y = map(int, coord.split(","))
         r, g, b = tuple(int(colour.lstrip("#")[i:i+2], 16) for i in (0, 2, 4))
         for dx in range(PIXEL_SIZE):
             for dy in range(PIXEL_SIZE):
-                img.putpixel((x * PIXEL_SIZE + dx, y * PIXEL_SIZE + dy), (r, g, b, 255))
+                img.putpixel(((x - 1) * PIXEL_SIZE + dx, (y - 1) * PIXEL_SIZE + dy), (r, g, b, 255))
 
-    draw = ImageDraw.Draw(img)
-    line_colour = (255, 255, 255, 100)
+    line_colour = (196, 203, 207, 100)
 
     for x in range(width + 1):
         x_pos = x * PIXEL_SIZE
@@ -41,13 +41,13 @@ def generate_image(grid, output="grid.png"):
         draw.line([(0, y_pos), (img_width, y_pos)], fill=line_colour, width=1)
 
     font = ImageFont.load_default()
-    for x in range(width):
-        draw.text((x * PIXEL_SIZE + 3, 0), str(x), fill=(255, 255, 255, 100), font=font)
-    for y in range(height):
-        draw.text((0, y * PIXEL_SIZE + 3), str(y), fill=(255, 255, 255, 100), font=font)
+    for x in range(1, width + 1):
+        draw.text(((x - 1) * PIXEL_SIZE + 3, 0), str(x), fill=(196, 203, 207, 150), font=font)
+    for y in range(1, height + 1):
+        draw.text((0, (y - 1) * PIXEL_SIZE + 3), str(y), fill=(196, 203, 207, 150), font=font)
 
     img.save(output)
-    print(f"Saved grid image with transparency and grid lines to {output}")
+    print(f"Generated image: {output}")
 
 def main():
     if len(sys.argv) != 4:
@@ -57,7 +57,7 @@ def main():
     try:
         x = int(sys.argv[1])
         y = int(sys.argv[2])
-        colour = sys.argv[3]
+        colour = sys.argv[3].lower()
     except ValueError:
         print("Invalid arguments. x and y must be integers, colour must be hex.")
         sys.exit(1)
@@ -68,7 +68,7 @@ def main():
 
     grid = load_grid()
 
-    if not (0 <= x < grid["width"] and 0 <= y < grid["height"]):
+    if not (1 <= x <= grid["width"] and 1 <= y <= grid["height"]):
         print(f"Out-of-bounds pixel: ({x},{y})")
         sys.exit(1)
 
